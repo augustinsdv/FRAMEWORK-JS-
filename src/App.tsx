@@ -137,7 +137,7 @@ function TaskList({ tasks, onDeleteTask, onToggleTask }: TaskListProps) {
           {task.description || "Pas de description"}
           {task.dueDate && (
             <span style={{ marginLeft: "1rem", color: "gray" }}>
-              📅 {task.dueDate}
+               {task.dueDate}
             </span>
           )}
           <button
