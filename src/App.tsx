@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import "./index.css";
+
 
 type Task = {
   id: string;
@@ -33,16 +35,34 @@ function App() {
   const toggleTask = (id: string) => {
     setTasks((prev) =>
       prev.map((t) =>
-        t.id === id ? { ...t, done: !t.done, updatedAt: new Date().toISOString() } : t
+        t.id === id
+          ? { ...t, done: !t.done, updatedAt: new Date().toISOString() }
+          : t
       )
     );
   };
 
+  
+  const doneCount = tasks.filter((t) => t.done).length;
+  const todoCount = tasks.length - doneCount;
+
   return (
-    <div>
+    <div className="todoapp">
       <h1>Mes tâches</h1>
       <Form onAddTask={addTask} />
-      <TaskList tasks={tasks} onDeleteTask={deleteTask} onToggleTask={toggleTask} />
+
+      
+    <p className="counter">
+      <span className="todo">{todoCount} à faire</span> /{" "}
+      <span className="done">{doneCount} faites</span>
+    </p>
+
+
+      <TaskList
+        tasks={tasks}
+        onDeleteTask={deleteTask}
+        onToggleTask={toggleTask}
+      />
     </div>
   );
 }
@@ -76,13 +96,14 @@ function Form({ onAddTask }: FormProps) {
 
     onAddTask(newTask);
 
+    // reset form
     setTitle("");
     setDescription("");
     setDueDate("");
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} style={{ marginBottom: "1rem" }}>
       <input
         type="text"
         placeholder="Titre"
@@ -113,6 +134,7 @@ type TaskListProps = {
   onDeleteTask: (id: string) => void;
   onToggleTask: (id: string) => void;
 };
+
 function TaskList({ tasks, onDeleteTask, onToggleTask }: TaskListProps) {
   if (tasks.length === 0) {
     return <p>Aucune tâche pour le moment.</p>;
@@ -130,9 +152,8 @@ function TaskList({ tasks, onDeleteTask, onToggleTask }: TaskListProps) {
               accentColor: task.done ? "green" : "red", // ✅ couleur dynamique
             }}
           />
-          <span style={{ marginLeft: "0.5rem", color: task.done ? "green" : "red" }}>
-            <strong>{task.title}</strong>
-          </span>
+          <span className={task.done ? "done" : "todo"}>  <strong>{task.title}</strong> </span>
+
           {" — "}
           {task.description || "Pas de description"}
           {task.dueDate && (
